@@ -1651,7 +1651,8 @@ as returned by `org-list-prevs-alist'."
      ;; Num bullet: increment it.
      ((string-match "[0-9]+" bullet)
       (replace-match
-       (number-to-string (1+ (string-to-number (match-string 0 bullet))))
+       (format (format "%%0%dd" (length (match-string 0 bullet)))
+               (1+ (string-to-number (match-string 0 bullet))))
        nil nil bullet))
      ;; Alpha bullet: increment it.
      ((string-match "[A-Za-z]" bullet)
@@ -1724,7 +1725,7 @@ This function modifies STRUCT."
 		 (replace-match "a" nil nil bullet))
 		;; First bullet is num: use "1".
 		((string-match "\\([0-9]+\\|[A-Za-z]\\)" bullet)
-		 (replace-match "1" nil nil bullet))
+                 (replace-match (format (format "%%0%dd" (1+ (log (length struct) 10))) 1) nil nil bullet))
 		;; Not an ordered list: keep bullet.
 		(t bullet))))))))
     (mapc fix-bul (mapcar #'car struct))))
